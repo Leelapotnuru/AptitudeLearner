@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}AptitudeLearner{% endblock %}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"></head>
+<body>
+{% if current_user.is_authenticated %}
+<aside class="sidebar"><a class="brand" href="{{ url_for('dashboard') }}"><span class="brand-mark">A</span><span>Aptitude<span class="brand-light">Learner</span></span></a>
+<div class="nav-label">WORKSPACE</div>
+<a class="nav-link {% if request.endpoint=='dashboard' %}active{% endif %}" href="{{ url_for('dashboard') }}"><span>⌂</span> Dashboard</a>
+<a class="nav-link {% if request.endpoint=='practice' %}active{% endif %}" href="{{ url_for('practice') }}"><span>▦</span> Practice library</a>
+<a class="nav-link {% if request.endpoint=='test' %}active{% endif %}" href="{{ url_for('test') }}"><span>◷</span> Mock tests</a>
+<div class="nav-label">YOUR LEARNING</div>
+<a class="nav-link {% if request.endpoint=='progress' %}active{% endif %}" href="{{ url_for('progress') }}"><span>▥</span> My progress</a>
+<a class="nav-link {% if request.endpoint=='bookmarks' %}active{% endif %}" href="{{ url_for('bookmarks') }}"><span>☆</span> Bookmarks</a>
+<div class="sidebar-bottom"><div class="mini-profile"><div class="avatar">{{ current_user.name[:1]|upper }}</div><div><b>{{ current_user.name }}</b><small>Student account</small></div></div><a class="logout" href="{{ url_for('logout') }}">Sign out ↗</a></div></aside>
+{% endif %}
+<main class="{% if current_user.is_authenticated %}main-shell{% else %}public-shell{% endif %}">
+{% if current_user.is_authenticated %}<header class="topbar"><div><span class="eyebrow">PLACEMENT PREPARATION</span><b>{% block page_heading %}Your learning space{% endblock %}</b></div><div class="top-user"><span class="status-dot"></span> Learning mode <div class="avatar small">{{ current_user.name[:1]|upper }}</div></div></header>{% endif %}
+<div class="page-wrap">
+{% with messages = get_flashed_messages(with_categories=true) %}{% if messages %}{% for category,message in messages %}<div class="flash {{ category }}">{{ message }}</div>{% endfor %}{% endif %}{% endwith %}
+{% block content %}{% endblock %}
+</div></main>
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>{% block scripts %}{% endblock %}
+</body></html>
